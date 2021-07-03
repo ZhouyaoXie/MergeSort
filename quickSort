@@ -1,0 +1,52 @@
+import random
+
+class Sort:
+
+    def quickSort(self, nums):
+        
+        def quickSort(start = 0, end = len(nums)):
+            
+            # base case
+            if end - start <= 1:
+                return nums[start:end]
+            
+            # select random pivot
+            pivot = random.randint(start, end - 1)
+            
+            # partition
+            left, mid, right = partition(start, end, pivot)
+            
+            # recursive call
+            quickSort(left, mid)
+            quickSort(right, end)
+        
+        def partition(start, end, pivot):
+            
+            # swap pivot with rightmost element
+            nums[pivot], nums[end - 1] = nums[end - 1], nums[pivot]
+            
+            # two pointers
+            p = start
+            q = end - 2
+            # count number of duplicated pivot
+            c = 0
+            
+            while p <= q:
+                if nums[p] < nums[end - 1]:
+                    p += 1
+                elif nums[p] == nums[end - 1]:
+                    nums[p], nums[end - 1 - c] = nums[end - 1 - c], nums[p]
+                    nums[p], nums[q] = nums[q], nums[p]
+                    c += 1
+                    q -= 1
+                else:
+                    nums[p], nums[q] = nums[q], nums[p]
+                    q -= 1
+                    
+            # move pivot to the middle
+            for i in range(c + 1):
+                nums[p + i], nums[end - 1 - i] = nums[end - 1 - i], nums[p + i]
+            return start, p, p + c + 1
+        
+        quickSort()
+        return nums
