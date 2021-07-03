@@ -1,0 +1,69 @@
+class Node:
+
+    def __init__(self, val = None, next = None):
+
+        self.val = val
+        self.next = next
+
+class Sort:
+
+    def mergeSortLinkedList(self, head):
+        
+        # get the length of the linked list
+        c, node = 0, head
+        while node:
+            node = node.next
+            c += 1
+            
+        def mergeSort(head, c = c):
+
+            # base case
+            if c <= 1:
+                return head
+
+            # divide the linked list into two
+            node = head
+            for _ in range(c // 2 - 1):
+                node = node.next
+            mid = node.next
+            node.next = None
+                
+            # recursive call
+            l1 = mergeSort(head, c // 2)
+            l2 = mergeSort(mid, c - c // 2)
+            
+            # merge the two sorted list
+            return merge(l1, l2)
+        
+        def merge(p, q):
+            head = p
+            # take care of head node
+            while q and p.val > q.val:
+                q_next = q.next
+                q.next = p
+                head = q
+                q = q_next
+                p = head
+            if not q:
+                return head
+                
+            # insert the rest of the nodes
+            while p.next and q:
+                while p.next and q and p.next.val <= q.val:
+                    # increment p
+                    p = p.next
+                while p.next and q and q.val < p.next.val:
+                    # insert q after p
+                    q_next = q.next
+                    q.next = p.next
+                    p.next = q
+                    q = q_next
+                
+            if q:
+                p.next = q
+                
+            return head
+        
+        return mergeSort(head, c)
+            
+                
